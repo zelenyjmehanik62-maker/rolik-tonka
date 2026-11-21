@@ -6,46 +6,45 @@ export type Shot = {
   label: string;
   seconds: number;
   motion: Motion; // движение для картинки-заглушки (на видео — только лёгкое)
-  focusX: number; // центр интереса по горизонтали 0..1 — для версии 9:16
+  focusX: number; // положение окна кадрирования 0..1 для 9:16
+  focusEndX?: number; // конечное положение, если кадр следует за движением
   title?: string; // титр
-  stageBreak?: boolean; // длинный переход перед кадром (смена этапа)
-  candleLabel?: boolean; // наложить надпись на пустую этикетку свечи
+  dissolveIn?: number; // секунды наплыва из предыдущего плана
+  candleLabel?: "match" | "lit"; // наложить надпись на пустую этикетку свечи
 };
 
 export const SHOTS: Shot[] = [
-  { id: "01", label: "Двор", seconds: 5, motion: "in", focusX: 0.5 },
-  { id: "02", label: "Руки на подоконнике", seconds: 4, motion: "none", focusX: 0.5 },
+  { id: "01", label: "Двор", seconds: 4.4, motion: "in", focusX: 0.59 },
+  { id: "02", label: "Руки на подоконнике", seconds: 2.8, motion: "none", focusX: 0.51 },
   {
     id: "03",
     label: "Папа в дверях",
-    seconds: 5.5,
+    seconds: 5.0,
     motion: "in",
-    focusX: 0.4,
+    focusX: 0.49,
     title: "Папа всегда приносил домой самый спелый гранат",
   },
-  { id: "03b", label: "Гранат в детские ладони", seconds: 4, motion: "none", focusX: 0.5 },
-  { id: "04", label: "СОК · гранат на ладони", seconds: 4.5, motion: "in", focusX: 0.55, stageBreak: true },
-  { id: "05", label: "СОК · разлом", seconds: 4, motion: "none", focusX: 0.5 },
-  { id: "06", label: "СОК · девочка с половинкой", seconds: 4, motion: "in", focusX: 0.5 },
+  { id: "03b", label: "Гранат в детские ладони", seconds: 3.7, motion: "none", focusX: 0.46, focusEndX: 0.51 },
+  { id: "04", label: "СОК · гранат на ладони", seconds: 3.4, motion: "in", focusX: 0.55 },
+  { id: "05", label: "СОК · разлом", seconds: 3.3, motion: "none", focusX: 0.5 },
+  { id: "06", label: "СОК · девочка с половинкой", seconds: 3.0, motion: "in", focusX: 0.75 },
   {
     id: "07",
     label: "ТЕПЛО · чай",
-    seconds: 5.5,
+    seconds: 5.1,
     motion: "right",
-    focusX: 0.6,
+    focusX: 0.78,
     title: "И в доме становилось тепло",
-    stageBreak: true,
+    dissolveIn: 0.72,
   },
-  { id: "08", label: "ТЕПЛО · гранат у груди", seconds: 4, motion: "in", focusX: 0.5 },
-  { id: "09", label: "ТЕПЛО · пиджак на стуле", seconds: 4, motion: "none", focusX: 0.75 },
-  { id: "10", label: "ДЫМ · мангал", seconds: 5, motion: "in", focusX: 0.5, stageBreak: true },
-  { id: "11", label: "ДЫМ · по стене", seconds: 4, motion: "left", focusX: 0.5 },
-  { id: "12", label: "ДЫМ · вместе на ступенях", seconds: 6, motion: "none", focusX: 0.5 },
-  { id: "13", label: "ПАМЯТЬ · пустой стул", seconds: 5, motion: "none", focusX: 0.75, stageBreak: true },
-  { id: "15", label: "СЕГОДНЯ · спичка", seconds: 5, motion: "none", focusX: 0.5, stageBreak: true },
-  { id: "14", label: "СЕГОДНЯ · свеча", seconds: 6, motion: "none", focusX: 0.47, candleLabel: true },
+  { id: "08", label: "ТЕПЛО · гранат у груди", seconds: 3.6, motion: "in", focusX: 0.79 },
+  { id: "09", label: "ТЕПЛО · пиджак на стуле", seconds: 3.8, motion: "none", focusX: 0.80, dissolveIn: 0.36 },
+  { id: "10", label: "ДЫМ · мангал", seconds: 5, motion: "in", focusX: 0.5, dissolveIn: 0.84 },
+  { id: "11", label: "ДЫМ · по стене", seconds: 3.7, motion: "left", focusX: 0.56, dissolveIn: 0.40 },
+  { id: "12", label: "ДЫМ · вместе на ступенях", seconds: 5.7, motion: "none", focusX: 0.30 },
+  { id: "13", label: "ПАМЯТЬ · пустой стул", seconds: 5, motion: "none", focusX: 0.80, dissolveIn: 0.76 },
+  { id: "15", label: "СЕГОДНЯ · спичка и свеча", seconds: 6.3, motion: "none", focusX: 0.485, focusEndX: 0.42, candleLabel: "match" },
 ];
 
 export const END_CARD_SECONDS = 6;
-export const FAST_FADE = 0.5; // сек
-export const STAGE_FADE = 1.0; // сек
+export const FINAL_DISSOLVE = 0.92;

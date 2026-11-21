@@ -1,8 +1,10 @@
 import React from "react";
-import { AbsoluteFill, Sequence, useVideoConfig } from "remotion";
+import { AbsoluteFill, Sequence, staticFile, useVideoConfig } from "remotion";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
+import { Audio } from "@remotion/media";
+import available from "./available.json";
 import { fade } from "@remotion/transitions/fade";
-import { SHOTS, END_CARD_SECONDS, FAST_FADE, STAGE_FADE } from "./shots";
+import { SHOTS, END_CARD_SECONDS, FINAL_DISSOLVE } from "./shots";
 import { Shot } from "./Shot";
 import { Title } from "./Title";
 import { EndCard } from "./EndCard";
@@ -10,12 +12,12 @@ import { Grain, Vignette, GRADE_FILTER } from "./Look";
 
 export const filmDurationInFrames = (fps: number) => {
   let total = SHOTS.reduce((a, s) => a + Math.round(s.seconds * fps), 0);
-  SHOTS.forEach((s, i) => {
-    if (i > 0) total -= Math.round((s.stageBreak ? STAGE_FADE : FAST_FADE) * fps);
-  });
-  total += Math.round(END_CARD_SECONDS * fps) - Math.round(STAGE_FADE * fps);
+  for (const shot of SHOTS) total -= Math.round((shot.dissolveIn ?? 0) * fps);
+  total += Math.round(END_CARD_SECONDS * fps) - Math.round(FINAL_DISSOLVE * fps);
   return total;
 };
+
+const SOUNDTRACK_FILE = "Tonka-action-mix.wav";
 
 export const Film: React.FC = () => {
   const { fps } = useVideoConfig();
@@ -23,16 +25,16 @@ export const Film: React.FC = () => {
     <AbsoluteFill style={{ backgroundColor: "#0b0806" }}>
       <AbsoluteFill style={{ filter: GRADE_FILTER }}>
         <TransitionSeries name="Кадры">
-          {SHOTS.flatMap((shot, i) => {
+          {SHOTS.flatMap((shot) => {
             const dur = Math.round(shot.seconds * fps);
             const nodes = [];
-            if (i > 0) {
+            if (shot.dissolveIn) {
               nodes.push(
                 <TransitionSeries.Transition
                   key={`t-${shot.id}`}
                   presentation={fade()}
                   timing={linearTiming({
-                    durationInFrames: Math.round((shot.stageBreak ? STAGE_FADE : FAST_FADE) * fps),
+                    durationInFrames: Math.round(shot.dissolveIn * fps),
                   })}
                 />,
               );
@@ -52,13 +54,16 @@ export const Film: React.FC = () => {
           <TransitionSeries.Transition
             key="t-end"
             presentation={fade()}
-            timing={linearTiming({ durationInFrames: Math.round(STAGE_FADE * fps) })}
+            timing={linearTiming({ durationInFrames: Math.round(FINAL_DISSOLVE * fps) })}
           />
           <TransitionSeries.Sequence key="end" name="Финал" durationInFrames={Math.round(END_CARD_SECONDS * fps)}>
             <EndCard />
           </TransitionSeries.Sequence>
         </TransitionSeries>
       </AbsoluteFill>
+      {(available.audio as string[]).includes(SOUNDTRACK_FILE) && (
+        <Audio src={staticFile(`audio/${SOUNDTRACK_FILE}`)} name="Музыка и звуки действий" />
+      )}
       <Vignette />
       <Grain />
     </AbsoluteFill>

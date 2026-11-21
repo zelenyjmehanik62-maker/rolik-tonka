@@ -93,3 +93,21 @@ Completely static locked-off camera. Only the small candle flame flickers softly
 ---
 
 Порядок: сначала кадр **14** и **03** на бесплатных кредитах (самые рискованные), потом остальные. Как будут первые 2–3 платных видео — напиши, сколько осталось кредитов.
+
+## Финальная перегенерация планов с гранатом
+
+Kling AI 4.0, Keyframes, 1080p, 5 секунд. Для финального монтажа выбраны обе обновлённые генерации.
+
+### 03b · Передача граната
+Стартовый кадр: `кадры/кадр03b.png`. Сохранили хват девочки и оставили движение только руке отца, чтобы пальцы сохраняли форму.
+
+```text
+Locked-off cinematic macro shot. The child already cradles the pomegranate from below with both cupped hands, exactly as in the reference. Both small hands keep the same still grip and silhouette throughout; the visible thumb rests on the front of the fruit and the other fingers remain naturally hidden behind it. Only the father moves: he gently releases his grip and withdraws his adult hand to the left in one slow, continuous motion. After release the fruit stays securely supported and still. Keep the same hands, sleeves, proportions, fruit size, composition and golden light from the reference. No finger movement on the child, no extra or merging fingers, no deformed joints, no hand intersections, no face and no zoom.
+```
+
+### 05 · Разлом граната
+Стартовый кадр: `кадры/кадр05.png`. Задали чистое разделение половинок и отдельные капли сока вместо тянущихся нитей.
+
+```text
+Locked-off macro, same golden light and copper tray. Both hands gently pull the ripe pomegranate sideways. In the first half second, the brittle white pith breaks cleanly and the two halves become completely separate, with clear empty air visible between them. They then move a little farther apart and hold. Juice falls straight down as a few distinct round droplets and makes a tiny ripple on the copper. Keep fruit, seed texture and fingers stable. No strands, strings, webs, sticky trails or liquid bridges between the halves; no new objects or camera movement.
+```

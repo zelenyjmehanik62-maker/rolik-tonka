@@ -1,6 +1,7 @@
 import React from "react";
 import {
   AbsoluteFill,
+  Easing,
   Img,
   interpolate,
   staticFile,
@@ -45,6 +46,8 @@ export const Shot: React.FC<{ shot: ShotT; durationInFrames: number }> = ({
   durationInFrames,
 }) => {
   const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const vertical = height > width;
   const hasVideo = (available.videos as string[]).includes(`v${shot.id}`);
   const hasFrame = (available.frames as string[]).includes(`f${shot.id}`);
 
@@ -56,12 +59,20 @@ export const Shot: React.FC<{ shot: ShotT; durationInFrames: number }> = ({
   let scale = 1 + (shot.motion === "none" ? strength * 0.3 : strength) * p;
   let tx = 0;
   if (shot.motion === "out") scale = 1 + strength * (1 - p);
-  if (shot.motion === "left") tx = -2.5 * p;
-  if (shot.motion === "right") tx = 2.5 * p;
+  if (shot.motion === "left") tx = -(scale - 1) * 42;
+  if (shot.motion === "right") tx = (scale - 1) * 42;
   if (shot.candleLabel) {
     scale = 1; // этикетка должна стоять точно на месте
     tx = 0;
   }
+
+  const focus = interpolate(
+    frame,
+    [durationInFrames * 0.12, durationInFrames * 0.73],
+    [shot.focusX, shot.focusEndX ?? shot.focusX],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.inOut(Easing.sin) },
+  );
+  const playbackRate = Math.min(1, 5 / shot.seconds);
 
   const mediaStyle: React.CSSProperties = {
     width: "100%",
@@ -71,7 +82,7 @@ export const Shot: React.FC<{ shot: ShotT; durationInFrames: number }> = ({
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#0b0806", overflow: "hidden" }}>
-      <CoverBox focusX={shot.focusX}>
+      <CoverBox focusX={vertical ? focus : 0.5}>
         <div
           style={{
             width: "100%",
@@ -81,13 +92,19 @@ export const Shot: React.FC<{ shot: ShotT; durationInFrames: number }> = ({
           }}
         >
           {hasVideo ? (
-            <Video name={`Видео ${shot.id}`} src={staticFile(`video/v${shot.id}.mp4`)} muted style={mediaStyle} />
+            <Video
+              name={`Видео ${shot.id}`}
+              src={staticFile(`video/v${shot.id}.mp4`)}
+              playbackRate={playbackRate}
+              muted
+              style={mediaStyle}
+            />
           ) : hasFrame ? (
             <Img src={staticFile(`frames/f${shot.id}.png`)} style={mediaStyle} />
           ) : (
             <Placeholder label={shot.label} id={shot.id} />
           )}
-          {shot.candleLabel && (hasVideo || hasFrame) ? <CandleLabel /> : null}
+          {shot.candleLabel && (hasVideo || hasFrame) ? <CandleLabel variant={shot.candleLabel} /> : null}
         </div>
       </CoverBox>
     </AbsoluteFill>
